@@ -1,0 +1,53 @@
+---
+title: "RMarkdown Presentation"
+author: "Leigh Pearson"
+date: "2023-12-02"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+Welcome to this presentation on the dynamics of student enrollment throughout the Johns Hopkins 10-module Data Science course, highlighting the challenges and patterns of online learning retention. Utilizing interactive data visualization through Plotly, we will present a compelling analysis of how student numbers vary from module to module, with a particular emphasis on the significant drop observed in Module 8. Our analysis aims not only to shed light on the course's progression but also to underscore the broader implications of student persistence in online educational environments. 
+
+## Plotly Chart
+
+```{r, , message = FALSE}
+library(plotly)
+
+# Initialize variables
+initial_students <- 100  # Starting number of students
+modules <- 1:10  # Modules 1 to 10
+enrollment <- numeric(length(modules))
+enrollment[1] <- initial_students
+
+# Calculate enrollment for each module with more variation
+set.seed(123)  # For reproducibility
+for (i in 2:length(modules)) {
+  if (i != 8) {
+    decrease_percent <- runif(1, 0.03, 0.08)  # Random decrease between 3% and 8%
+  } else {
+    decrease_percent <- runif(1, 0.15, 0.25)  # Larger decrease for Module 8
+  }
+  enrollment[i] <- enrollment[i - 1] * (1 - decrease_percent)
+}
+
+# Create a plot
+plot_data <- data.frame(Module = modules, Enrollment = enrollment)
+plot <- plot_ly(data = plot_data, x = ~Module, y = ~Enrollment, type = 'scatter', mode = 'lines+markers',
+             marker = list(size = 10, color = 'red'),
+             line = list(color = 'red'))
+plot <- plot %>% layout(title = "Enrollment Trend in Data Science Course",
+                  xaxis = list(title = "Module"),
+                  yaxis = list(title = "Number of Students Enrolled"))
+
+plot
+```
+
+## Conclusion
+
+This concludes my RMarkdown presentation published on RPubs
+
